@@ -393,3 +393,68 @@ html.js .card.reveal.in { animation: none; }
 .snd { font: inherit; font-size: 14px; font-weight: 600; color: #fff; background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .45); border-radius: 999px; padding: 9px 22px; cursor: pointer; transition: background .25s, transform .25s var(--ease), border-color .25s; }
 .snd:hover { background: rgba(255, 184, 0, .2); border-color: var(--gold); transform: translateY(-2px); }
 .snd[hidden] { display: none; }
+
+/* =====================================================================
+   UI/UX PONSEL (Android & iPhone)
+   ===================================================================== */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; }
+body { overscroll-behavior-y: none; }
+.slide { min-height: 100vh; min-height: 100svh; }
+button, a, .menu-btn { touch-action: manipulation; }
+
+.tabbar { display: none; }
+
+@media (max-width: 900px), (pointer: coarse) and (max-width: 1100px) {
+  html { scroll-snap-type: y mandatory; }
+  /* bar atas ringkas, selalu terlihat */
+  .topbar { height: 52px; gap: 10px; }
+  .topbar.hide { transform: none; }
+  .topbar .now, .topbar .count { display: none; }
+  .brand { flex: 1; min-width: 0; }
+  .brand-t { font-size: 14px; }
+  .menu-btn { width: 44px; height: 44px; border-radius: 14px; }
+  .dots { display: none; }
+
+  /* ruang untuk bar atas dan bar navigasi bawah */
+  .slide { padding: 72px 0 calc(104px + env(safe-area-inset-bottom, 0px)); }
+  .shead { margin-bottom: 20px; }
+  .shead h2 { font-size: clamp(28px, 8vw, 38px); }
+  .eyebrow { font-size: 12px; letter-spacing: .18em; }
+  .lead { font-size: 16px; }
+  .card, .card.big, .card.wide { padding: 16px 18px; border-radius: 16px; }
+  .card.big { gap: 12px; }
+  .card h3 { font-size: 17px; }
+  .card p, .blist, .nlist { font-size: 16px; }
+  .grid { gap: 12px; }
+  .row { padding: 12px 14px; }
+  .step, .step-note { padding: 12px 14px; font-size: 16px; }
+  .callout { font-size: 17px; padding: 16px 18px; }
+  .darkbox { font-size: 19px; padding: 24px 22px; }
+  .quote { padding: 48px 22px 24px; font-size: 20px; }
+  .table-scroll { -webkit-overflow-scrolling: touch; }
+  .table-scroll::after { content: "geser ke samping"; display: block; text-align: center; font-size: 12px; padding: 8px; color: var(--muted-l); background: #f1f3fd; }
+  .swot { min-height: 150px; padding: 20px 28px 20px 24px; gap: 14px; }
+  .sfoot { display: none; }
+  .cover-foot { display: flex; padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
+  .cover-foot span:first-child { display: none; }
+  .scroll-cue { margin: 0 auto; }
+  .thanks .sfoot { display: none; }
+  .snd, .totop { min-height: 46px; display: inline-flex; align-items: center; }
+  .drawer ol { grid-template-columns: 1fr; }
+  .drawer a { min-height: 52px; font-size: 16px; }
+  .toast { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+
+  /* bar navigasi bawah untuk jempol */
+  .tabbar { position: fixed; z-index: 48; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 10px; padding: 10px max(14px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(14px, env(safe-area-inset-left, 0px)); background: rgba(11, 16, 48, .78); backdrop-filter: blur(16px) saturate(1.4); -webkit-backdrop-filter: blur(16px) saturate(1.4); border-top: 1px solid rgba(160, 175, 255, .2); color: #fff; }
+  .tabbar button { font: inherit; color: inherit; cursor: pointer; border: 1px solid rgba(160, 175, 255, .35); background: rgba(255, 255, 255, .08); border-radius: 14px; min-width: 52px; height: 48px; display: grid; place-items: center; font-weight: 700; font-size: 14px; transition: transform .2s var(--ease), background .2s; }
+  .tabbar button:active { transform: scale(.94); background: rgba(255, 184, 0, .3); }
+  .tabbar button[disabled] { opacity: .35; }
+  .tabbar .next { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+  .tabbar .share { padding: 0 14px; min-width: 0; }
+  .tabbar .mid { flex: 1; min-width: 0; text-align: center; line-height: 1.2; }
+  .tabbar .mid b { display: block; font-size: 13px; color: var(--gold); font-variant-numeric: tabular-nums; }
+  .tabbar .mid span { display: block; font-size: 12px; color: var(--muted-d); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tabbar svg { width: 22px; height: 22px; display: block; }
+}
+@media (max-width: 420px) { .tabbar .share { display: none; } }
+@media (max-height: 520px) and (orientation: landscape) { .tabbar { display: none; } .slide { padding-bottom: 60px; } }

@@ -115,7 +115,7 @@
       g.list.forEach(function (sp) { items.push([sp, t]); t += g.step; });
       t += 0.35;
     });
-    var f = Math.min(1, 14 / Math.max(t, 1));
+    var f = Math.min(1, (window.matchMedia('(max-width: 900px)').matches ? 9 : 14) / Math.max(t, 1));
     items.forEach(function (it) { it[0].style.setProperty('--d', (it[1] * f).toFixed(3) + 's'); });
     /* elemen desain (kartu, ikon, kotak) tampil sedikit sebelum teks di dalamnya */
     var ri = 0;
@@ -244,6 +244,36 @@
   window.addEventListener('hashchange', function () { goHash(true); });
   if (location.hash) { window.addEventListener('load', function () { goHash(false); }); goHash(false); }
 
+
+  /* ---------- bar navigasi bawah (ponsel) ---------- */
+  var mobileMQ = window.matchMedia('(max-width: 900px)');
+  var tab = document.createElement('nav'); tab.className = 'tabbar'; tab.setAttribute('aria-label', 'Navigasi slide');
+  tab.innerHTML = '<button type="button" class="prev" aria-label="Slide sebelumnya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg></button>' +
+    '<div class="mid" aria-live="polite"><b></b><span></span></div>' +
+    '<button type="button" class="share" aria-label="Bagikan tautan slide ini">Bagikan</button>' +
+    '<button type="button" class="next" aria-label="Slide berikutnya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>';
+  document.body.appendChild(tab);
+  var tPrev = tab.querySelector('.prev'), tNext = tab.querySelector('.next'), tShare = tab.querySelector('.share');
+  function tabUpdate() {
+    tab.querySelector('.mid b').textContent = (current + 1) + ' / ' + slides.length;
+    tab.querySelector('.mid span').textContent = slides[current].getAttribute('data-label');
+    tPrev.disabled = current === 0; tNext.disabled = current === slides.length - 1;
+  }
+  function goTo(k) { slides[k].scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); }
+  tPrev.addEventListener('click', function () { if (current > 0) goTo(current - 1); });
+  tNext.addEventListener('click', function () {
+    if (current < slides.length - 1) { if (current + 1 === lastIdx && typeof startSound === 'function') startSound(); goTo(current + 1); }
+  });
+  tShare.addEventListener('click', function () {
+    var u = urlFor(slides[current].id), title = 'Lingkungan Internal dan Eksternal Bisnis';
+    if (navigator.share) { navigator.share({ title: title, text: slides[current].getAttribute('data-label'), url: u }).catch(function () {}); }
+    else if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(u).then(function () { say('Tautan disalin'); }, function () { say(u); }); }
+    else { say(u); }
+  });
+  var origSet2 = setCurrent;
+  setCurrent = function (i) { origSet2(i); tabUpdate(); };
+  tabUpdate();
+
   /* ---------- scroll: progress bar, current section, topbar, parallax ---------- */
   var bar = document.getElementById('progress');
   var topbar = document.querySelector('.topbar');
@@ -255,7 +285,8 @@
     var mid = y + window.innerHeight * 0.45, idx = 0;
     for (var i = 0; i < slides.length; i++) { if (slides[i].offsetTop <= mid) idx = i; }
     setCurrent(idx);
-    if (y > lastY + 8 && y > 240) topbar.classList.add('hide');
+    if (mobileMQ.matches) topbar.classList.remove('hide');
+    else if (y > lastY + 8 && y > 240) topbar.classList.add('hide');
     else if (y < lastY - 8 || y < 240) topbar.classList.remove('hide');
     lastY = y;
     if (!reduce) {
